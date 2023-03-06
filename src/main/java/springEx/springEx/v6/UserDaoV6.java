@@ -24,30 +24,23 @@ public class UserDaoV6 {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     public void add(User user) {
-        jdbcTemplate.update(new PreparedStatementCreator() {
-            @Override
-            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                PreparedStatement ps = con.prepareStatement("insert into user(id, name, password) values(?, ?, ?)");
-                ps.setString(1, user.getId());
-                ps.setString(2, user.getName());
-                ps.setString(3, user.getPassword());
-                return ps;
-            }
-        });
+        jdbcTemplate.update("insert into user(id, name, password) values (?, ?, ?)",
+                user.getId(), user.getName(), user.getPassword());
     }
 
     // 1. user 정보를 조회 하는 것에 관심
     public User get(String id) throws SQLException {
-        return jdbcTemplate.queryForObject("select * from user where id = ?", new RowMapper<User>() {
-            @Override
-            public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                User user = new User();
-                user.setId(rs.getString("id"));
-                user.setName(rs.getString("name"));
-                user.setPassword(rs.getString("password"));
-                return user;
-            }
-        }, id);
+        return jdbcTemplate.queryForObject("select * from user where id = ?", getRowMapper(), id);
+    }
+
+    private static RowMapper<User> getRowMapper() {
+        return (rs, rowNum) -> {
+            User user = new User();
+            user.setId(rs.getString("id"));
+            user.setName(rs.getString("name"));
+            user.setPassword(rs.getString("password"));
+            return user;
+        };
     }
 
     public void deleteAll() throws SQLException {
