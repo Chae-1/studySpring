@@ -51,7 +51,7 @@ class UserServiceTest {
             e.printStackTrace();
         }
         List<User> all = daoV6.getAll();
-        Assertions.assertThat(users.get(0).getLevel()).isEqualTo(Level.SILVER);
+        Assertions.assertThat(all.get(0).getLevel()).isEqualTo(Level.BASIC);
     }
 
     @Test
