@@ -24,13 +24,13 @@ public class UserDaoV6 {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
     public void add(User user) {
-        jdbcTemplate.update("insert into user(id, name, password, login, recommend, level) values (?, ?, ?)",
+        jdbcTemplate.update("insert into user(id, name, password, login, recommend, level) values (?, ?, ?, ?, ?, ?)",
                 user.getId(), user.getName(), user.getPassword(),
                 user.getLogin(),
                 user.getRecommend(),
                 user.getLevel().getType());
     }
-    public User get(String id) throws SQLException {
+    public User get(String id)  {
         return jdbcTemplate.queryForObject("select * from user where id = ?", getRowMapper(), id);
     }
     private static RowMapper<User> getRowMapper() {
@@ -58,7 +58,7 @@ public class UserDaoV6 {
 
     public void update(User user) {
         jdbcTemplate.update("update user " +
-                "set name = ?, password = ?, login = ?, recommend = ?,  level = ?",
+                "set name = ?, password = ?, login = ?, recommend = ?, level = ?",
                 user.getName(), user.getPassword(), user.getLogin(),
                 user.getRecommend(), user.getLevel().getType());
     }

@@ -1,7 +1,7 @@
 package springEx.springEx.domain;
 
 public enum Level {
-    BASIC(0), SLIVER(1), GOLD(2);
+    BASIC(0), SILVER(1), GOLD(2);
     private final Integer type;
 
     Level(Integer type) {
@@ -17,7 +17,7 @@ public enum Level {
             case 0:
                 return BASIC;
             case 1:
-                return SLIVER;
+                return SILVER;
             case 2:
                 return GOLD;
             default:
