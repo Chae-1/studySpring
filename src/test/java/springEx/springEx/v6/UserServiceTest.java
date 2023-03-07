@@ -17,14 +17,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class UserServiceTest {
 
-    UserService userService;
+    TestUserService userService;
     UserDaoV6 daoV6;
     List<User> users;
     @BeforeEach
     public void init() {
         ApplicationContext context = new AnnotationConfigApplicationContext(Factory.class);
         daoV6 = context.getBean("userDaoV6", UserDaoV6.class);
-        userService = new TestUserService(daoV6, "a");
+        userService = new TestUserService(daoV6, "b");
+        User user = new User("a", "a", "a", 50, 1, Level.BASIC);
+        User user1 = new User("b", "b", "b", 50, 30, Level.SILVER);
+        User user2 = new User("c", "c", "c", 50, 50, Level.SILVER);
+        users = Arrays.asList(
+                user, user1, user2
+        );
 
     }
 
@@ -35,13 +41,23 @@ class UserServiceTest {
 
     @Test
     public void addOrNothing() {
+        for (User user : users) {
+            daoV6.add(user);
+        }
+        try {
+            userService.upgradeLevels();
+            Assertions.fail("fail");
+        } catch (TestUserServiceException e) {
+            e.printStackTrace();
+        }
+        List<User> all = daoV6.getAll();
+        Assertions.assertThat(users.get(0).getLevel()).isEqualTo(Level.SILVER);
     }
 
     @Test
     public void addTest() {
         daoV6.deleteAll();
-        User user = new User("a", "a", "a", 1, 1, null);
-        User user1 = new User("b", "b", "b", 50, 20, Level.SILVER);
+        User user = new User("f", "f", "f", 1, 1, null);
         userService.add(user);
 
         User findUser = daoV6.get(user.getId());
@@ -57,7 +73,8 @@ class UserServiceTest {
 
         @Override
         protected void upgradeLevel(User user) {
-            if(user.getId().equals(this.id)) throw new TestUserServiceException();
+            if(user.getId().equals(id))
+                throw new TestUserServiceException();
             super.upgradeLevel(user);
         }
     }
