@@ -1,11 +1,22 @@
 package springEx.springEx.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
+@Getter
+@Setter
 public class User {
     private String id;
     private String name;
     private String password;
+    private Integer login;
+    private Integer recommend;
+    private Level level;
+
+    public User() {
+    }
 
     public User(String id, String name, String password) {
         this.id = id;
@@ -13,31 +24,12 @@ public class User {
         this.password = password;
     }
 
-    public User() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
+    public User(String id, String name, String password, Integer login, Integer recommend) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
+        this.login = login;
+        this.recommend = recommend;
     }
 
     @Override

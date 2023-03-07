@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import springEx.springEx.domain.Level;
 import springEx.springEx.domain.User;
 import springEx.springEx.v3.UserDaoV3;
 import springEx.springEx.v4.UserDaoV4;
@@ -14,16 +15,24 @@ import springEx.springEx.v6.UserDaoV6;
 
 import java.io.*;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserDaoTest {
 
     UserDaoV6 userDao;
-
+    List<User> list;
     @BeforeEach
     public void beforeEach() {
         ApplicationContext context = new AnnotationConfigApplicationContext(Factory.class);
         userDao = context.getBean("userDaoV6", UserDaoV6.class);
+        list = Arrays.asList(
+                new User("g", "g", "g", 0, 0),
+                new User("c", "c", "c", 40, 10),
+                new User("a", "a", "a", 50, 100)
+        );
     }
 
     @AfterEach
@@ -43,14 +52,12 @@ public class UserDaoTest {
         User userA = new User("a", "a", "a");
         userDao.add(userA);
         List<User> listA = userDao.getAll();
-        Assertions.assertEquals(listA.size(), 1);
+        assertEquals(listA.size(), 1);
 
         User userB = new User("b", "b", "b");
         userDao.add(userA);
         List<User> listB = userDao.getAll();
-        Assertions.assertEquals(listA.size(), 2);
-
-
+        assertEquals(listA.size(), 2);
     }
 
     @Test
