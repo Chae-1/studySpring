@@ -4,13 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Proxy extends LogTest{
-    private LogTest logTest;
-    public Proxy(LogTest logTest) {
-        this.logTest = logTest;
+    private LogTest target;
+    public Proxy(LogTest target) {
+        this.target = target;
     }
     @Override
     public void printS() {
         log.info("asdadsada");
-        logTest.printS();
+        target.printS();
     }
 }

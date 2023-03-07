@@ -1,11 +1,18 @@
 package springEx.springEx.domain;
 
 public enum Level {
-    BASIC(0), SILVER(1), GOLD(2);
+    GOLD(2, null), SILVER(1, GOLD), BASIC(0, SILVER);
     private final Integer type;
 
-    Level(Integer type) {
+    private final Level next;
+
+    Level(Integer type, Level next) {
         this.type = type;
+        this.next = next;
+    }
+
+    public Level nextLevel() {
+        return next;
     }
 
     public Integer getType() {

@@ -46,7 +46,7 @@ public class UserDaoV6 {
         };
     }
 
-    public void deleteAll() throws SQLException {
+    public void deleteAll() {
         jdbcTemplate.update("delete from user");
     }
     public List<User> getAll() {

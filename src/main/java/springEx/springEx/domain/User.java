@@ -13,7 +13,6 @@ public class User {
     private String password;
     private Integer login;
     private Integer recommend;
-
     private Level level;
 
     public User() {
@@ -48,6 +47,15 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(password, user.password);
+    }
+
+    public void upgradeLevel() {
+        Level next = level.nextLevel();
+        if(next == null) {
+            throw new IllegalArgumentException("dd");
+        } else {
+            this.level = next;
+        }
     }
 
     @Override
