@@ -2,10 +2,11 @@ package springEx.springEx;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import springEx.springEx.domain.User;
-import springEx.springEx.v6.UserDaoV6;
-import springEx.springEx.v6.UserService;
+import org.springframework.mail.MailSender;
+import org.springframework.transaction.PlatformTransactionManager;
+import springEx.springEx.v6.*;
 
 import javax.sql.DataSource;
 
@@ -20,11 +21,26 @@ public class Factory {
     // aop, proxy
     @Bean
     public UserService userService() {
-        return new UserService(userDaoV6());
+        return new UserServiceTx(userServiceImpl(), transactionManager());
+    }
+
+    @Bean
+    public UserService userServiceImpl() {
+        return new UserServiceImpl(userDaoV6(), dataSource(), mailSender());
     }
 
     @Bean
     public UserDaoV6 userDaoV6() {
         return new UserDaoV6(dataSource());
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+
+    @Bean
+    public MailSender mailSender() {
+        return new DummyMailSender();
     }
 }

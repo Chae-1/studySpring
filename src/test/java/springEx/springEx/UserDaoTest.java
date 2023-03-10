@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import springEx.springEx.domain.Level;
 import springEx.springEx.domain.User;
 import springEx.springEx.v6.UserDaoV6;
-import springEx.springEx.v6.UserService;
+import springEx.springEx.v6.UserServiceImpl;
 
 import javax.sql.DataSource;
 import java.io.*;
@@ -29,7 +29,7 @@ public class UserDaoTest {
     UserDaoV6 userDao;
     List<User> list;
     @Autowired
-    UserService service;
+    UserServiceImpl service;
 
     @Test
     void isExist() {
@@ -40,7 +40,7 @@ public class UserDaoTest {
         ApplicationContext context = new AnnotationConfigApplicationContext(Factory.class);
         dataSource = context.getBean("dataSource", DataSource.class);
         userDao = context.getBean("userDaoV6", UserDaoV6.class);
-        service = context.getBean("userService", UserService.class);
+        service = context.getBean("userService", UserServiceImpl.class);
         list = Arrays.asList(
                 new User("g", "g", "g", 0, 0, BASIC),
                 new User("c", "c", "c", 100, 30, Level.SILVER),
@@ -88,7 +88,7 @@ public class UserDaoTest {
     }
 
     @Test
-    public void testUpgrade() {
+    public void testUpgrade() throws SQLException {
         for (User user : list) {
             userDao.add(user);
         }
