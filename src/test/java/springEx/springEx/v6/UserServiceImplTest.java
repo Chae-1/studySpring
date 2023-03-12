@@ -12,10 +12,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import springEx.springEx.Factory;
 import springEx.springEx.domain.Level;
 import springEx.springEx.domain.User;
+import springEx.springEx.strategyAndProxy.TransactionHandler;
 
 import javax.sql.DataSource;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 
@@ -27,6 +29,7 @@ class UserServiceImplTest {
     TestUserServiceImpl userService;
     UserServiceTx userServiceTx;
     UserDaoV6 daoV6;
+    UserServiceImpl userServiceImpl;
     List<User> users;
     MailSender mailSender;
     PlatformTransactionManager manager;
@@ -37,6 +40,7 @@ class UserServiceImplTest {
         userService = new TestUserServiceImpl("b");
         mailSender = context.getBean("mailSender", MailSender.class);
         manager = context.getBean("transactionManager", PlatformTransactionManager.class);
+        userServiceImpl = new UserServiceImpl(daoV6, context.getBean("dataSource", DataSource.class), mailSender);
         User user = new User("a", "a", "a", 50, 1, Level.BASIC, "coguddlf1000@gmail.com");
         User user1 = new User("b", "b", "b", 50, 30, Level.SILVER, "coguddlf@gmail.com");
         User user2 = new User("c", "c", "c", 50, 50, Level.SILVER, "coguddlf1000@naver.com");
@@ -104,6 +108,24 @@ class UserServiceImplTest {
         Method method = name.getClass().getMethod("length");
 
         System.out.println(method.invoke(name));
+    }
+
+    @Test
+    void upgradeAll0rNot() {
+
+        TransactionHandler handler = new TransactionHandler(userServiceImpl);
+        handler.setPattern("upgradeLevels");
+        handler.setTransactionManager(manager);
+
+        UserService service = (UserService) Proxy.newProxyInstance(UserServiceImpl.class.getClassLoader(), new Class[]{UserService.class}, handler);
+        service.upgradeLevels();
+
+        for (User user : users) {
+            daoV6.add(user);
+        }
+        List<User> all = daoV6.getAll();
+        Assertions.assertThat(all.get(0).getLevel()).isEqualTo(Level.BASIC);
+
     }
 
     static class TestUserServiceImpl extends UserServiceImpl {

@@ -20,6 +20,7 @@ import java.util.List;
 
 public class UserDaoV6 {
     private JdbcTemplate jdbcTemplate;
+
     public UserDaoV6(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }

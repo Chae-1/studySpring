@@ -40,6 +40,10 @@ public class Factory {
     }
 
     @Bean
+    public MessageFactoryBean message() {
+        return new MessageFactoryBean("Factory Bean");
+    }
+    @Bean
     public MailSender mailSender() {
         return new DummyMailSender();
     }

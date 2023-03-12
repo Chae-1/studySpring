@@ -79,4 +79,7 @@ public class UserServiceImpl implements UserService{
         userDaoV6.add(user);
     }
 
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 }
